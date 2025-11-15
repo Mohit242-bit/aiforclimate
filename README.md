@@ -1,15 +1,244 @@
-# 🌍 Delhi Digital Twin - 3D Air Quality Management System
+# Delhi Digital Twin - AI for Climate 🌍
 
-**A Production-Ready Digital Twin for Delhi with Corridor-Based Traffic Simulation, AI Policy Recommendations, and Real-Time AQI Monitoring**
+## Overview
 
-![Status](https://img.shields.io/badge/Status-Production--Ready-brightgreen)
-![Tech](https://img.shields.io/badge/Tech-React+Three.js+Python-blue)
-![AI](https://img.shields.io/badge/AI-Powered-orange)
-![Version](https://img.shields.io/badge/Version-1.0.0-blue)
+The **Delhi Digital Twin** is an advanced AI-powered system that simulates real-time traffic patterns and air quality across Delhi's corridors. The system provides emergency protocol activation, real-time monitoring, and intervention impact analysis for crisis response management.
+
+## 🎯 What Can You Do?
+
+### 1. **View the 3D City**
+- See real-time traffic visualization across 5 major zones
+- Watch animated vehicles moving on corridors
+- 11 CCTV camera presets including India Gate, Lotus Temple, Red Fort
+
+### 2. **Monitor Air Quality**
+- Real-time AQI (Air Quality Index) tracking per zone
+- PM2.5 and NO2 pollutant levels
+- Zone-level color coding (green to red)
+- Health impact scoring
+
+### 3. **Activate Emergency Protocol**
+- Click `🚨 EMERGENCY PROTOCOL ALPHA` button (right panel)
+- System activates 3-phase response:
+  - **Detection** → identifies AQI spike
+  - **Analysis** → evaluates impact zones
+  - **Deployment** → implements interventions
+- Watch real-time AQI changes across zones
+- See estimated lives saved
+
+### 4. **Test Interventions**
+Select and test interventions:
+- **Truck Ban** - Restrict heavy vehicles 6-12 AM
+- **Odd-Even Rule** - Reduce vehicles by 50%
+- **Lane Addition** - Increase corridor capacity
+- **Signal Optimization** - Adjust traffic light timing
+- **Dynamic Rerouting** - Redirect traffic flow
+
+View immediate impact on:
+- AQI levels (can drop 45-63 points)
+- Traffic speed (improve 28-36%)
+- Travel time (reduce ~50%)
+- Health impact (estimate lives saved)
+
+### 5. **View Comprehensive Analysis**
+- Interactive dashboard comparing baseline vs. emergency
+- 4-panel Plotly charts with hover details
+- Static high-res charts for presentations
+- Zone-by-zone breakdown
+- Pollutant analysis
+
+## 🎮 How to Use
+
+### Starting the Application
+
+**Terminal 1 - Start Backend:**
+```bash
+python backend/app.py
+```
+Backend runs on: `http://127.0.0.1:5000`
+
+**Terminal 2 - Start Frontend:**
+```bash
+npm run dev
+```
+Frontend runs on: `http://localhost:3000`
+
+### Using the Interface
+
+**Left Panel (☰ Hamburger):**
+- Shows current AQI levels for all zones
+- Displays traffic metrics
+- Shows emergency protocol status
+
+**Right Panel (🤖 AI Panel):**
+- `🚨 EMERGENCY PROTOCOL ALPHA` - Click to activate emergency response
+- Real-time status updates during protocol execution
+- Shows results and impact metrics
+
+**3D Visualization:**
+- Drag to rotate the city
+- Scroll to zoom in/out
+- Click landmarks for preset camera views
+
+**Bottom Panel (📹 CCTV Cameras):**
+- Select from 11 camera presets
+- View city from different angles
+- See specific zones and landmarks
+
+## 🌟 Key Features
+
+### Real-Time Traffic Simulation
+- 30 corridor segments across Delhi
+- 40 intersections with signal timing
+- 129 origin-destination pairs
+- BPR congestion model for accurate traffic prediction
+
+### Air Quality Monitoring
+- Zone-level AQI tracking (305-342 baseline)
+- PM2.5 and NO2 pollutant monitoring
+- Health impact assessment
+- Real-time heatmaps
+
+### Emergency Protocol
+- One-click crisis response
+- 3-phase automated system
+- Multi-intervention deployment
+- Real-time status and animations
+
+### AI Recommendations
+- Suggests top 3 interventions
+- Shows confidence levels (85-90%)
+- Estimates health impact (lives saved)
+- Displays economic implications
+
+### Comprehensive Visualizations
+- Interactive 3D city with Three.js
+- Real-time traffic flow maps
+- AQI heatmaps by zone
+- Before/after intervention comparisons
+- Multiple output formats (HTML, PNG)
+
+## 📊 Expected Results
+
+### Baseline Scenario (Current)
+- Average AQI: 321 (Hazardous)
+- Average Speed: 46.2 km/h
+- Total Traffic: 39,250 vehicles/hour
+- PM2.5: 170-195 µg/m³
+
+### After Emergency Protocol
+- Average AQI: 265 (Very Unhealthy, improved)
+- Average Speed: 60.6 km/h (+31%)
+- Total Traffic: 19,450 vehicles/hour (-50%)
+- PM2.5: 132-158 µg/m³ (-18%)
+- **Lives Saved (Estimated): 362 people**
+
+### Zone-by-Zone Improvements
+- **Zone 1 (Connaught Place):** -63 AQI points, +28.9% speed
+- **Zone 2 (Karol Bagh):** -45 AQI points, +29.2% speed
+- **Zone 3 (Dwarka):** -57 AQI points, +31% speed
+- **Zone 4 (Rohini):** -60 AQI points, +36% speed ✅ BEST
+- **Zone 5 (Saket):** -60 AQI points, +30.4% speed
+
+## 🎬 Demo Walkthrough
+
+### Step 1: Observe Baseline
+- Open application at `http://localhost:3000`
+- Click ☰ hamburger to see current AQI levels
+- Notice Zone 3 (Dwarka) has highest AQI: 342
+
+### Step 2: Activate Emergency Protocol
+- Click `🚨 EMERGENCY PROTOCOL ALPHA` button (right panel)
+- Watch status change: Detecting → Analyzing → Deploying
+- Observe real-time AQI changes in left panel
+- Zone 3 AQI drops from 342 → 285 (-57 points)
+
+### Step 3: View Results
+- See all zones improved
+- Check estimated lives saved: ~362
+- View traffic speed improvements (28-36%)
+- Traffic volume reduced by 50%
+
+### Step 4: Explore Visualizations
+- Go to: `visualization_outputs/emergency_protocol_complete.html`
+- View interactive dashboards
+- See zone-by-zone breakdown
+- Download reports if needed
+
+## 🛠️ Tech Stack
+
+**Frontend:**
+- React 18.2.0
+- Three.js (3D graphics)
+- Zustand (state management)
+- Vite 5.4.20
+
+**Backend:**
+- Flask + Flask-CORS
+- Python 3.8+
+- Pandas, NumPy
+
+**Visualization:**
+- Plotly (interactive charts)
+- Matplotlib, Seaborn (static images)
+
+For detailed technical information, see `tech.md`
+
+## 🗂️ File Structure
+
+```
+visualization_outputs/
+├── emergency_protocol_complete.html    ← Main dashboard
+├── interactive_dashboard.html          ← 4-panel charts
+├── impact_metrics.html                 ← Impact analysis
+├── pollutant_analysis.html             ← Pollutant data
+├── emergency_protocol_analysis.png     ← High-res image
+└── README.md                           ← Documentation
+```
+
+## 🔗 Important Files
+
+- `src/App.jsx` - Main React application
+- `src/components/CitySceneImproved.jsx` - 3D visualization
+- `src/store/simulationStore.js` - State management with emergency protocol
+- `backend/app.py` - REST API server
+- `src/models/` - Python simulation models
+
+## ⚡ Quick Troubleshooting
+
+**Backend won't connect?**
+- Ensure `python backend/app.py` is running
+- Check port 5000 is not in use
+- Clear browser cache
+
+**3D scene not showing?**
+- Use Chrome or Edge (best WebGL support)
+- Check browser console for errors
+- Refresh page (Ctrl+Shift+R)
+
+**Data not loading?**
+- Verify CSV files exist in `data/` directory
+- Check backend console for errors
+- Restart backend server
+
+## 🚀 Next Steps
+
+1. **View the visualization dashboards** - Check `visualization_outputs/`
+2. **Run emergency protocol** - Click the button and watch real-time changes
+3. **Explore different interventions** - Test each type and compare results
+4. **Review technical details** - See `tech.md` for implementation details
+5. **Check hackathon roadmap** - See `hackathon.md` for future plans
+
+## 📞 Support
+
+For technical specifications and architecture details, see `tech.md`  
+For hackathon roadmap and milestones, see `hackathon.md`
 
 ---
 
-## 🎯 What Is This?
+**Version:** 1.0  
+**Last Updated:** 2025-11-15  
+**Status:** ✅ Production Ready
 
 A **fully functional 3D Digital Twin** of Delhi that simulates traffic, emissions, and air quality in real-time. Policymakers can test interventions like truck bans, lane additions, and signal optimizations **before** implementing them in the real world—measuring their impact on AQI, traffic flow, and public health.
 
