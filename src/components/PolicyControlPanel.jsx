@@ -52,7 +52,12 @@ function PolicyControlPanel() {
   const avgAQI = zones.reduce((sum, z) => sum + z.aqi, 0) / zones.length
 
   return (
-    <div className="controls-panel" style={{ maxWidth: '400px' }}>
+    <div className="controls-panel" style={{ 
+      maxWidth: '400px',
+      maxHeight: '85vh',
+      overflowY: 'auto',
+      overflowX: 'hidden'
+    }}>
       {/* Header with Crisis Status */}
       <div style={{ 
         background: situation?.severity === 'CRITICAL' ? 

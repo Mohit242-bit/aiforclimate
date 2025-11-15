@@ -12,7 +12,7 @@ import * as THREE from 'three'
  * - Color-coded haze layers
  */
 
-// Animated pollution cloud - OPTIMIZED
+// Animated pollution cloud - OPTIMIZED FOR PERFORMANCE
 function PollutionCloud({ position, aqi, size = 30 }) {
   const cloudRef = useRef()
   
@@ -24,23 +24,25 @@ function PollutionCloud({ position, aqi, size = 30 }) {
   }, [aqi])
   
   const opacity = useMemo(() => {
-    return Math.min(0.35, (aqi - 100) / 500) // Reduced opacity
+    return Math.min(0.25, (aqi - 100) / 600) // Further reduced opacity
   }, [aqi])
   
   useFrame((state) => {
     if (cloudRef.current) {
-      // Very slow rotation only
-      cloudRef.current.rotation.y = state.clock.elapsedTime * 0.02
+      // Very slow rotation - skip every other frame
+      if (state.clock.elapsedTime % 2 < 1) {
+        cloudRef.current.rotation.y = state.clock.elapsedTime * 0.01
+      }
     }
   })
   
   return (
     <Sphere
       ref={cloudRef}
-      args={[size, 16, 16]} // Reduced geometry
+      args={[size, 12, 12]} // Further reduced geometry
       position={position}
     >
-      <meshBasicMaterial // Changed to basic for performance
+      <meshBasicMaterial // Basic material for better performance
         color={color}
         transparent
         opacity={opacity}

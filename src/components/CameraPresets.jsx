@@ -1,10 +1,11 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { useSimulationStore } from '../store/simulationStore'
 import * as THREE from 'three'
 
 function CameraPresets() {
   const controlsRef = useRef()
   const cameraRef = useRef()
+  const [menuOpen, setMenuOpen] = useState(false)
   
   // Define CCTV camera positions - EXACT landmark coordinates
   const cameraPresets = {
@@ -148,20 +149,58 @@ function CameraPresets() {
   return (
     <div style={{
       position: 'absolute',
-      bottom: '30px',
-      left: '30px',
+      bottom: '20px',
+      right: '20px',
       zIndex: 100,
       display: 'flex',
       flexDirection: 'column',
-      gap: '10px'
+      gap: '10px',
+      alignItems: 'flex-end'
     }}>
+      {/* Hamburger Button */}
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        style={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          border: '2px solid rgba(255, 255, 255, 0.3)',
+          borderRadius: '50%',
+          width: '60px',
+          height: '60px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '4px',
+          cursor: 'pointer',
+          transition: 'all 0.3s',
+          boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+          zIndex: 101
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)'
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)'
+          e.currentTarget.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
+        }}
+      >
+        <div style={{ fontSize: '24px', color: 'white' }}>📹</div>
+        <div style={{ fontSize: '9px', color: 'white', fontWeight: 'bold' }}>CCTV</div>
+      </button>
+
+      {/* Camera Menu - Collapsible */}
+      {menuOpen && (
       <div style={{
-        background: 'rgba(0, 0, 0, 0.8)',
+        background: 'rgba(0, 0, 0, 0.9)',
         backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        border: '2px solid rgba(102, 126, 234, 0.5)',
         borderRadius: '15px',
         padding: '15px',
-        minWidth: '180px'
+        minWidth: '220px',
+        maxHeight: '70vh',
+        overflowY: 'auto',
+        animation: 'slideIn 0.3s ease-out'
       }}>
         <h3 style={{
           fontSize: '14px',
@@ -285,10 +324,22 @@ function CameraPresets() {
         </div>
       </div>
 
+      )}
+
       <style>{`
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
+        }
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </div>

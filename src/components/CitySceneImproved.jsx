@@ -6,6 +6,11 @@ import { useSimulationStore } from '../store/simulationStore'
 import EnhancedTrafficSystem from './EnhancedTrafficSystem'
 import PollutionVisualization from './PollutionVisualization'
 
+// Performance optimization: Reduce detail on buildings
+const PERFORMANCE_MODE = true
+const MAX_BUILDINGS = 50 // Reduce from 100+
+const BUILDING_LOD_DISTANCE = 150
+
 // Interactive building with proper structure and placement
 function InteractiveBuilding({ position, height, width, depth, aqi, type = 'commercial', buildingData }) {
   const meshRef = useRef()
@@ -85,10 +90,10 @@ function InteractiveBuilding({ position, height, width, depth, aqi, type = 'comm
         />
       </Box>
       
-      {/* Windows with proper spacing */}
-      {Array.from({ length: Math.floor(height / 3) }).map((_, floorIndex) => (
+      {/* Windows with proper spacing - OPTIMIZED */}
+      {!PERFORMANCE_MODE && Array.from({ length: Math.min(3, Math.floor(height / 3)) }).map((_, floorIndex) => (
         <group key={floorIndex}>
-          {Array.from({ length: Math.max(2, Math.floor(width / 3)) }).map((_, windowIndex) => {
+          {Array.from({ length: Math.min(2, Math.floor(width / 3)) }).map((_, windowIndex) => {
             const windowWidth = 1.5
             const spacing = (width - windowWidth * Math.floor(width / 3)) / (Math.floor(width / 3) + 1)
             return (
@@ -99,14 +104,14 @@ function InteractiveBuilding({ position, height, width, depth, aqi, type = 'comm
                   floorIndex * 3 + 1.5,
                   depth/2 + 0.01
                 ]}
-                args={[windowWidth, 1.8, 0.1]}
+                args={[windowWidth, 2, 0.05]}
               >
                 <meshStandardMaterial
-                  color="#0f172a"
-                  metalness={0.9}
-                  roughness={0.1}
-                  emissive={aqi > 200 ? '#fbbf24' : '#3b82f6'}
+                  color="#60a5fa"
+                  emissive="#60a5fa"
                   emissiveIntensity={0.3}
+                  transparent
+                  opacity={0.7}
                 />
               </Box>
             )

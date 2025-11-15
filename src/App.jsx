@@ -10,6 +10,7 @@ import Legend from './components/Legend'
 import CameraPresets from './components/CameraPresets'
 import CameraManager from './components/CameraManager'
 import CameraControls, { NavigationModeSelector } from './components/CameraControls'
+import EmergencyResultsModal from './components/EmergencyResultsModal'
 import { useSimulationStore } from './store/simulationStore'
 
 function App() {
@@ -80,21 +81,19 @@ function App() {
           {/* Enhanced Camera Controls with Multiple Modes */}
           <CameraControls />
           
-          {/* Post-processing Effects - REDUCED for clarity */}
-          <EffectComposer>
+          {/* Post-processing Effects - OPTIMIZED for performance */}
+          <EffectComposer enabled={false}>
             <Bloom 
-              intensity={0.15}
-              luminanceThreshold={0.9}
-              luminanceSmoothing={0.7}
-              mipmapBlur
+              intensity={0.1}
+              luminanceThreshold={0.95}
+              luminanceSmoothing={0.5}
             />
-            {/* Depth of Field DISABLED for clarity - was making scene blurry */}
-            <Vignette offset={0.1} darkness={0.15} />
+            <Vignette offset={0.15} darkness={0.1} />
           </EffectComposer>
         </Suspense>
         
-        {/* Performance Stats */}
-        <Stats />
+        {/* Performance Stats - Disabled in production */}
+        {/* <Stats /> */}
       </Canvas>
       
       {/* Left Panel Toggle (Info Panel) */}
@@ -171,6 +170,10 @@ function App() {
       {showRightPanel && <PolicyControlPanel />}
       <Legend />
       <CameraPresets />
+      <EmergencyResultsModal />
+      
+      {/* Emergency Results Modal */}
+      <EmergencyResultsModal />
       
       {/* Loading Screen */}
       {loading && (
