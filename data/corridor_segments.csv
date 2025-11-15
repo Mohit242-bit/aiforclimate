@@ -1,0 +1,31 @@
+segment_id,from_intersection,to_intersection,length_km,lanes,speed_limit_kmh,is_one_way,zone_id,road_type,road_name
+SEG001,INT001,INT002,2.5,4,60,0,Z01,Arterial,Ring Road - West Segment 1
+SEG002,INT002,INT003,2.1,4,60,0,Z02,Arterial,Ring Road - West Segment 2
+SEG003,INT003,INT004,2.3,4,60,0,Z02,Arterial,Ring Road - South Segment 1
+SEG004,INT004,INT005,2.0,4,60,0,Z03,Arterial,Ring Road - South Segment 2
+SEG005,INT005,INT006,2.2,4,60,0,Z03,Arterial,Ring Road - East Segment 1
+SEG006,INT006,INT007,2.4,4,60,0,Z04,Arterial,Ring Road - East Segment 2
+SEG007,INT007,INT008,2.3,4,60,0,Z04,Arterial,Ring Road - North Segment 1
+SEG008,INT008,INT001,2.1,4,60,0,Z01,Arterial,Ring Road - North Segment 2
+SEG009,INT002,INT009,3.5,6,80,0,Z01,Highway,NH8 - Northbound Segment 1
+SEG010,INT009,INT010,3.2,6,80,0,Z05,Highway,NH8 - Northbound Segment 2
+SEG011,INT010,INT011,3.8,6,80,0,Z05,Highway,NH8 - Northbound Segment 3
+SEG012,INT004,INT012,3.0,6,80,0,Z02,Highway,NH1 - Southbound Segment 1
+SEG013,INT012,INT013,3.3,6,80,0,Z06,Highway,NH1 - Southbound Segment 2
+SEG014,INT013,INT014,3.1,6,80,0,Z06,Highway,NH1 - Southbound Segment 3
+SEG015,INT001,INT015,2.8,3,45,0,Z01,Arterial,Outer Ring Road - West
+SEG016,INT015,INT016,2.6,3,45,0,Z07,Arterial,Outer Ring Road - Southwest
+SEG017,INT016,INT017,2.9,3,45,0,Z07,Arterial,Outer Ring Road - South
+SEG018,INT017,INT018,2.7,3,45,0,Z03,Arterial,Outer Ring Road - Southeast
+SEG019,INT018,INT019,3.0,3,45,0,Z08,Arterial,Outer Ring Road - East
+SEG020,INT019,INT020,2.8,3,45,0,Z08,Arterial,Outer Ring Road - Northeast
+SEG021,INT020,INT021,2.6,3,45,0,Z04,Arterial,Outer Ring Road - North
+SEG022,INT021,INT001,2.9,3,45,0,Z01,Arterial,Outer Ring Road - Northwest
+SEG023,INT002,INT022,1.8,2,40,0,Z01,Local,Karol Bagh Road
+SEG024,INT003,INT023,2.1,2,40,0,Z02,Local,Lajpat Nagar Road
+SEG025,INT005,INT024,1.9,2,40,0,Z03,Local,Hauz Khas Road
+SEG026,INT007,INT025,2.0,2,40,0,Z04,Local,Connaught Place Road
+SEG027,INT009,INT026,1.7,2,35,0,Z05,Local,Rajpuri Road
+SEG028,INT011,INT027,1.6,2,35,0,Z05,Local,Ghaziabad Link Road
+SEG029,INT016,INT028,1.9,2,40,0,Z07,Local,Dwarka Road
+SEG030,INT020,INT029,1.8,2,40,0,Z08,Local,Noida Link Road

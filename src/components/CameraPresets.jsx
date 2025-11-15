@@ -77,37 +77,53 @@ function CameraPresets() {
   }
 
   const smoothCameraTransition = (preset) => {
-    // Get camera from global store or use default fallback
-    const { cameraRef: globalCamera } = useSimulationStore.getState()
-    const camera = globalCamera || cameraRef.current
+    // Get camera from global store
+    const { cameraRef: globalCamera, controlsRef: globalControls } = useSimulationStore.getState()
+    const camera = globalCamera
     
     if (!camera) {
-      console.warn('Camera not initialized yet')
+      console.warn('Camera not initialized yet, waiting...')
+      // Retry after a short delay
+      setTimeout(() => smoothCameraTransition(preset), 100)
       return
     }
     
     const startPos = camera.position.clone()
     const endPos = new THREE.Vector3(...preset.position)
+    const targetPos = new THREE.Vector3(...preset.target)
     const startTime = Date.now()
     const duration = 2000 // 2 seconds
+    
+    // Disable orbit controls during transition if available
+    if (globalControls && globalControls.enabled !== undefined) {
+      globalControls.enabled = false
+    }
     
     const animate = () => {
       const elapsed = Date.now() - startTime
       const progress = Math.min(elapsed / duration, 1)
       
-      // Easing function (ease-in-out)
+      // Easing function (ease-in-out cubic)
       const eased = progress < 0.5
-        ? 2 * progress * progress
-        : -1 + (4 - 2 * progress) * progress
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2
       
       // Interpolate position
       camera.position.lerpVectors(startPos, endPos, eased)
       
-      // Look at target
-      camera.lookAt(...preset.target)
+      // Look at target smoothly
+      camera.lookAt(targetPos)
       
       if (progress < 1) {
         requestAnimationFrame(animate)
+      } else {
+        // Re-enable controls after animation
+        if (globalControls && globalControls.enabled !== undefined) {
+          globalControls.enabled = true
+          if (globalControls.target) {
+            globalControls.target.copy(targetPos)
+          }
+        }
       }
     }
     

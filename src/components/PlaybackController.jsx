@@ -1,17 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSimulationStore } from '../store/simulationStore'
+import ImpactResultsModal from './ImpactResultsModal'
 
 function PlaybackController() {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentStep, setCurrentStep] = useState(0)
   const [showOverlay, setShowOverlay] = useState(false)
   const [overlayMessage, setOverlayMessage] = useState('')
+  const [showResults, setShowResults] = useState(false)
+  const [interventionData, setInterventionData] = useState(null)
   const intervalRef = useRef()
+  const beforeStateRef = useRef(null)
   
   const { 
     applyIntervention,
     setTime,
-    zones
+    zones,
+    triggerEmergencyProtocol,
+    resetEmergencyProtocol
   } = useSimulationStore()
 
   // Emergency response sequence steps
@@ -97,10 +103,15 @@ function PlaybackController() {
   ]
 
   const startPlayback = () => {
+    // Save before state for comparison
+    beforeStateRef.current = {
+      zones: zones.map(z => ({ ...z })),
+      timestamp: Date.now()
+    }
+    
     setIsPlaying(true)
     setCurrentStep(0)
     setShowOverlay(true)
-    runSequence()
   }
 
   const stopPlayback = () => {
@@ -109,9 +120,22 @@ function PlaybackController() {
     if (intervalRef.current) {
       clearTimeout(intervalRef.current)
     }
+    
+    // Show results modal after completion
+    if (currentStep >= playbackSequence.length - 1 && beforeStateRef.current) {
+      setInterventionData({
+        name: 'Emergency Protocol Alpha - Multi-Zone Response',
+        type: 'emergency',
+        zones: [1, 2, 3, 4, 5],
+        beforeData: beforeStateRef.current
+      })
+      setShowResults(true)
+    }
   }
 
-  const runSequence = () => {
+  useEffect(() => {
+    if (!isPlaying) return
+    
     if (currentStep >= playbackSequence.length) {
       stopPlayback()
       return
@@ -127,19 +151,22 @@ function PlaybackController() {
     
     // Run action
     if (step.action) {
-      step.action()
+      try {
+        step.action()
+      } catch (error) {
+        console.error('Error executing step action:', error)
+      }
     }
 
     // Move to next step after duration
     intervalRef.current = setTimeout(() => {
       setCurrentStep(prev => prev + 1)
-      runSequence()
     }, step.duration)
-  }
-
-  useEffect(() => {
-    if (isPlaying && currentStep < playbackSequence.length) {
-      runSequence()
+    
+    return () => {
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current)
+      }
     }
   }, [currentStep, isPlaying])
 
@@ -150,58 +177,17 @@ function PlaybackController() {
       }
     }
   }, [])
+  
+  // Watch for trigger from outside
+  useEffect(() => {
+    if (triggerEmergencyProtocol && !isPlaying) {
+      startPlayback()
+      resetEmergencyProtocol()
+    }
+  }, [triggerEmergencyProtocol, isPlaying])
 
   return (
     <>
-      {/* Control Button */}
-      <div style={{
-        position: 'absolute',
-        top: '100px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 200
-      }}>
-        {!isPlaying ? (
-          <button
-            onClick={startPlayback}
-            style={{
-              background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)',
-              border: 'none',
-              borderRadius: '30px',
-              color: 'white',
-              padding: '15px 30px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              boxShadow: '0 10px 30px rgba(239, 68, 68, 0.3)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              animation: 'pulse 2s infinite'
-            }}
-          >
-            <span style={{ fontSize: '20px' }}>▶️</span>
-            DEMO EMERGENCY RESPONSE
-          </button>
-        ) : (
-          <button
-            onClick={stopPlayback}
-            style={{
-              background: 'rgba(0, 0, 0, 0.8)',
-              border: '2px solid #ef4444',
-              borderRadius: '30px',
-              color: 'white',
-              padding: '15px 30px',
-              fontSize: '16px',
-              fontWeight: 'bold',
-              cursor: 'pointer'
-            }}
-          >
-            ⏹ STOP PLAYBACK
-          </button>
-        )}
-      </div>
-
       {/* Message Overlay */}
       {showOverlay && (
         <div style={{
@@ -282,6 +268,17 @@ function PlaybackController() {
           </div>
         </div>
       )}
+
+      {/* Impact Results Modal */}
+      <ImpactResultsModal 
+        show={showResults}
+        onClose={() => {
+          setShowResults(false)
+          setInterventionData(null)
+          beforeStateRef.current = null
+        }}
+        intervention={interventionData}
+      />
 
       <style>{`
         @keyframes pulse {

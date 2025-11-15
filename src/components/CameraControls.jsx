@@ -34,6 +34,23 @@ function CameraControls() {
       }
     }
   }, [camera])
+  
+  // Store controls ref in global state
+  useEffect(() => {
+    if (controlsRef.current && controlMode === 'orbit') {
+      const { setControlsRef } = useSimulationStore.getState()
+      if (setControlsRef) {
+        setControlsRef(controlsRef.current)
+      }
+    }
+    
+    return () => {
+      const { setControlsRef } = useSimulationStore.getState()
+      if (setControlsRef) {
+        setControlsRef(null)
+      }
+    }
+  }, [controlMode, controlsRef.current])
 
   // Keyboard controls for FPS mode
   useEffect(() => {

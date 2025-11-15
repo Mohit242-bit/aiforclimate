@@ -7,7 +7,8 @@ function ControlPanel() {
     applyIntervention, 
     getRecommendations, 
     recommendations,
-    runScenario 
+    runScenario,
+    startEmergencyProtocol
   } = useSimulationStore()
 
   useEffect(() => {
@@ -63,12 +64,10 @@ function ControlPanel() {
         
         <button 
           className="button-3d"
-          onClick={() => handleApplyIntervention({
-            id: 'emergency',
-            type: 'emergency',
-            name: 'Emergency Response',
-            zones: [1, 2, 3, 4, 5]
-          })}
+          onClick={() => {
+            // Trigger the full emergency protocol sequence
+            startEmergencyProtocol()
+          }}
         >
           🚨 Emergency AQI Response
         </button>

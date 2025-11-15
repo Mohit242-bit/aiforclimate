@@ -16,6 +16,8 @@ import { useSimulationStore } from './store/simulationStore'
 
 function App() {
   const [loading, setLoading] = useState(true)
+  const [showLeftPanel, setShowLeftPanel] = useState(false)
+  const [showRightPanel, setShowRightPanel] = useState(false)
   const { currentData, fetchSimulationData } = useSimulationStore()
 
   useEffect(() => {
@@ -31,36 +33,41 @@ function App() {
         shadows
         camera={{ position: [80, 60, 80], fov: 45, near: 0.1, far: 1000 }}
         gl={{ 
-          antialias: true, 
+          antialias: true,
           alpha: false,
           powerPreference: "high-performance",
           shadowMapEnabled: true,
-          shadowMapType: THREE.PCFSoftShadowMap
+          shadowMapType: THREE.PCFSoftShadowMap,
+          pixelRatio: window.devicePixelRatio
         }}
+        dpr={[1, 2]}
       >
         <Suspense fallback={null}>
-          {/* Lighting */}
-          {/* Stabilized lighting setup */}
-          <ambientLight intensity={0.4} />
+          {/* Lighting - ENHANCED for better visibility */}
+          {/* Strong ambient light to see everything clearly */}
+          <ambientLight intensity={0.6} />
 
-          {/* Sun light */}
+          {/* Sun light - BRIGHTER */}
           <directionalLight
-            position={[100, 120, 100]}
-            intensity={0.9}
+            position={[100, 150, 100]}
+            intensity={1.2}
             castShadow
-            shadow-mapSize={[2048, 2048]}
-            shadow-camera-left={-200}
-            shadow-camera-right={200}
-            shadow-camera-top={200}
-            shadow-camera-bottom={-200}
+            shadow-mapSize={[4096, 4096]}
+            shadow-camera-left={-250}
+            shadow-camera-right={250}
+            shadow-camera-top={250}
+            shadow-camera-bottom={-250}
+            shadow-bias={-0.0001}
           />
 
-          {/* Fill lights to avoid flicker during movement */}
-          <hemisphereLight skyColor={'#d1d5db'} groundColor={'#0f172a'} intensity={0.2} />
+          {/* Fill lights - STRONGER */}
+          <hemisphereLight skyColor={'#e0e7ff'} groundColor={'#1e293b'} intensity={0.4} />
           
-          {/* City glow lights */}
-          <pointLight position={[-50, 30, -50]} intensity={0.3} color="#fbbf24" />
-          <pointLight position={[50, 30, 50]} intensity={0.3} color="#60a5fa" />
+          {/* City glow lights - MORE VISIBLE */}
+          <pointLight position={[-50, 40, -50]} intensity={0.6} color="#fbbf24" distance={100} />
+          <pointLight position={[50, 40, 50]} intensity={0.6} color="#60a5fa" distance={100} />
+          <pointLight position={[-50, 40, 50]} intensity={0.5} color="#a78bfa" distance={100} />
+          <pointLight position={[50, 40, -50]} intensity={0.5} color="#fb923c" distance={100} />
           
           {/* Environment */}
           <Environment preset="city" />
@@ -75,21 +82,16 @@ function App() {
           {/* Enhanced Camera Controls with Multiple Modes */}
           <CameraControls />
           
-          {/* Post-processing Effects for Realism */}
+          {/* Post-processing Effects - REDUCED for clarity */}
           <EffectComposer>
             <Bloom 
-              intensity={0.3} 
-              luminanceThreshold={0.8}
-              luminanceSmoothing={0.9}
+              intensity={0.15}
+              luminanceThreshold={0.9}
+              luminanceSmoothing={0.7}
               mipmapBlur
             />
-            <DepthOfField 
-              focusDistance={0.02} 
-              focalLength={0.1} 
-              bokehScale={3}
-              height={480}
-            />
-            <Vignette offset={0.2} darkness={0.3} />
+            {/* Depth of Field DISABLED for clarity - was making scene blurry */}
+            <Vignette offset={0.1} darkness={0.15} />
           </EffectComposer>
         </Suspense>
         
@@ -97,10 +99,81 @@ function App() {
         <Stats />
       </Canvas>
       
+      {/* Left Panel Toggle (Info Panel) */}
+      <button
+        onClick={() => setShowLeftPanel(!showLeftPanel)}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          left: showLeftPanel ? '340px' : '20px',
+          zIndex: 1100,
+          width: '50px',
+          height: '50px',
+          borderRadius: '50%',
+          border: 'none',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          fontSize: '24px',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.1)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.5)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        }}
+      >
+        ☰
+      </button>
+
+      {/* Right Panel Toggle (AI Panel) */}
+      <button
+        onClick={() => setShowRightPanel(!showRightPanel)}
+        style={{
+          position: 'absolute',
+          top: '20px',
+          right: showRightPanel ? '420px' : '20px',
+          zIndex: 1100,
+          padding: '12px 20px',
+          borderRadius: '25px',
+          border: 'none',
+          background: 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)',
+          color: 'white',
+          fontSize: '14px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'scale(1.05)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(118, 75, 162, 0.5)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'scale(1)';
+          e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+        }}
+      >
+        {showRightPanel ? '✕ Close AI' : '🤖 AI Panel'}
+      </button>
+      
       {/* UI Overlays */}
       <NavigationModeSelector />
-      <InfoPanel />
-      <PolicyControlPanel />
+      {showLeftPanel && <InfoPanel />}
+      {/* UI Overlays */}
+      <NavigationModeSelector />
+      {showLeftPanel && <InfoPanel />}
+      {showRightPanel && <PolicyControlPanel />}
       <Timeline />
       <Legend />
       <PlaybackController />

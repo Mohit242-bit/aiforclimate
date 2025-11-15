@@ -1,0 +1,41 @@
+intersection_id,latitude,longitude,has_signal,cycle_time_sec,green_time_sec,road_name,zone_id
+INT001,28.6139,77.0509,1,120,50,Ring Road Junction,Z01
+INT002,28.6185,77.0425,1,120,55,Ring Road - Karol Bagh Junction,Z01
+INT003,28.6102,77.0358,1,120,50,Ring Road - South Delhi Junction,Z02
+INT004,28.5987,77.0289,1,150,60,Ring Road - Nehru Place Junction,Z02
+INT005,28.5856,77.0342,1,120,50,Ring Road - East Delhi Junction,Z03
+INT006,28.5945,77.0589,1,120,55,Ring Road - East Junction,Z03
+INT007,28.6089,77.0698,1,120,50,Ring Road - Northeast Junction,Z04
+INT008,28.6201,77.0612,1,120,55,Ring Road - North Junction,Z04
+INT009,28.6342,77.0298,1,150,65,NH8 - Guru Dronacharya Intersection,Z01
+INT010,28.6542,77.0412,1,150,60,NH8 - Udyog Vihar Intersection,Z05
+INT011,28.6823,77.0598,1,150,65,NH8 - Faridabad Link,Z05
+INT012,28.5612,77.0198,1,150,65,NH1 - Badarpur Junction,Z02
+INT013,28.5234,77.0089,1,150,60,NH1 - Mathura Road Junction,Z06
+INT014,28.4856,76.9945,1,150,65,NH1 - Noida Link Junction,Z06
+INT015,28.6089,77.0012,1,120,50,Outer Ring Road - West Junction,Z07
+INT016,28.5734,76.9834,1,120,55,Outer Ring Road - Southwest Junction,Z07
+INT017,28.5312,76.9756,1,120,50,Outer Ring Road - South Junction,Z03
+INT018,28.5089,77.0145,1,120,55,Outer Ring Road - Southeast Junction,Z08
+INT019,28.5234,77.0534,1,120,50,Outer Ring Road - East Junction,Z08
+INT020,28.5612,77.0856,1,120,55,Outer Ring Road - Northeast Junction,Z04
+INT021,28.6234,77.0745,1,120,50,Outer Ring Road - North Junction,Z01
+INT022,28.6156,77.0358,1,90,40,Karol Bagh Local Junction,Z01
+INT023,28.5945,77.0287,1,90,40,Lajpat Nagar Local Junction,Z02
+INT024,28.5734,77.0412,1,90,40,Hauz Khas Local Junction,Z03
+INT025,28.6089,77.0689,1,90,40,Connaught Place Local Junction,Z04
+INT026,28.6456,77.0234,1,90,35,Rajpuri Local Junction,Z05
+INT027,28.6734,77.0567,1,90,35,Ghaziabad Local Junction,Z05
+INT028,28.5456,76.9578,1,90,40,Dwarka Local Junction,Z07
+INT029,28.5923,77.0934,1,90,40,Noida Link Local Junction,Z08
+INT030,28.6312,77.0423,1,120,50,Central Delhi Junction,Z02
+INT031,28.5645,77.0234,1,120,50,South Delhi Junction,Z03
+INT032,28.6789,77.0312,1,120,55,North Delhi Junction,Z04
+INT033,28.5234,76.9945,1,90,45,Dwarka Junction,Z07
+INT034,28.6534,77.0745,1,90,40,East Delhi Junction,Z08
+INT035,28.5812,77.0089,1,120,50,Airport Road Junction,Z06
+INT036,28.6023,77.0567,1,90,45,Inner Ring Road Junction,Z02
+INT037,28.5423,77.0456,1,90,40,Greater Kailash Junction,Z03
+INT038,28.6645,77.0234,1,90,45,Yamuna Expressway Junction,Z05
+INT039,28.5123,77.0345,1,90,40,South Extension Junction,Z08
+INT040,28.6234,77.0123,1,120,55,Delhi Gate Junction,Z01

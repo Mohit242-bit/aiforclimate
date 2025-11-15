@@ -5,46 +5,144 @@ import numpy as np
 import sys
 import os
 
-# Add parent directory to path to import simulation modules
+# Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from src.simulation import load_data, compute_energy_demand, compute_aqi, compute_heat_island
-from src.ai_prescriptive import generate_random_interventions, simulate_interventions, train_surrogate
-from policy_engine import get_policy_recommendations, TrafficOptimizer, ExposureAnalyzer
 
 app = Flask(__name__)
 CORS(app)
+
+# Try to import existing modules, but don't fail if they're missing
+try:
+    from src.simulation import load_data, compute_energy_demand, compute_aqi, compute_heat_island
+    HAS_SIMULATION = True
+except:
+    HAS_SIMULATION = False
+    print("[INFO] Running with mock data - simulation modules not loaded")
+
+try:
+    from corridor_api import corridor_api, init_corridor_models
+    app.register_blueprint(corridor_api)
+    base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    corridor_network, corridor_simulator, corridor_intervention, corridor_emissions = init_corridor_models(base_path)
+    print("[OK] Corridor models initialized")
+    print(f"[OK] Network: {len(corridor_network.segment_data)} segments, {len(corridor_network.intersection_data)} intersections")
+    print(f"[OK] Topology: {corridor_network.get_network_topology()}")
+    HAS_CORRIDOR = True
+except Exception as e:
+    print(f"[INFO] Corridor models not available: {e}")
+    HAS_CORRIDOR = False
+    corridor_network = None
+    corridor_simulator = None
+    corridor_emissions = None
+
+# Mock data cache
+MOCK_ZONES = [
+    {'id': 1, 'name': 'Connaught Place', 'aqi': 220, 'energy': 1500, 'heat': 0.6, 'traffic_flow': 1200},
+    {'id': 2, 'name': 'Karol Bagh', 'aqi': 200, 'energy': 1600, 'heat': 0.5, 'traffic_flow': 1100},
+    {'id': 3, 'name': 'Dwarka', 'aqi': 240, 'energy': 1400, 'heat': 0.7, 'traffic_flow': 900},
+    {'id': 4, 'name': 'Rohini', 'aqi': 210, 'energy': 1700, 'heat': 0.55, 'traffic_flow': 1300},
+    {'id': 5, 'name': 'Saket', 'aqi': 230, 'energy': 1550, 'heat': 0.52, 'traffic_flow': 1150}
+]
 
 # Cache for models
 models_cache = {}
 
 @app.route('/api/baseline', methods=['GET'])
 def get_baseline():
-    """Get baseline simulation data"""
-    zones, weather, traffic = load_data()
-    day = 1
-    temp = weather.loc[weather['day'] == day, 'temperature'].values[0]
+    """Get baseline simulation data - integrates real corridor infrastructure"""
     
-    results = []
-    for i, zone in zones.iterrows():
-        tflow = traffic[(traffic['zone_id'] == zone['zone_id']) & (traffic['day'] == day)]['traffic_flow'].values[0]
-        energy = compute_energy_demand(zone, temp)
-        aqi = compute_aqi(zone, tflow, {'temperature': temp})
-        heat = compute_heat_island(zone)
-        
-        results.append({
-            'id': int(zone['zone_id']),
-            'name': f"Zone {int(zone['zone_id'])}",
-            'aqi': float(aqi),
-            'energy': float(energy),
-            'heat': float(heat)
+    # Try to use corridor simulation if available
+    if HAS_CORRIDOR and corridor_simulator and corridor_emissions:
+        try:
+            print("[INFO] Running baseline corridor simulation...")
+            # Run corridor simulation
+            baseline_results = corridor_simulator.run_simulation('baseline')
+            
+            # Get zone-level AQI from emissions model
+            zone_aqi_list = corridor_emissions.compute_all_zones_aqi()
+            
+            # Get zone traffic aggregation
+            zone_traffic = baseline_results.get('zones', {})
+            
+            # Format for frontend
+            results = []
+            for zone_aqi in zone_aqi_list:
+                zone_id = zone_aqi['zone_id']
+                zone_traffic_data = zone_traffic.get(zone_id, {})
+                
+                results.append({
+                    'id': int(zone_id.replace('Z', '').lstrip('0') or 1),
+                    'name': f"Zone {zone_id}",
+                    'zone_id': zone_id,
+                    'aqi': float(zone_aqi['total_aqi']),
+                    'energy': 1500 + zone_traffic_data.get('total_flow', 0) * 0.1,  # Energy scales with traffic
+                    'heat': 0.5 + zone_traffic_data.get('total_flow', 0) * 0.0001,  # Heat island effect
+                    'traffic_flow': float(zone_traffic_data.get('total_flow', 0)),
+                    'avg_speed': float(zone_traffic_data.get('avg_speed', 0)),
+                    'pm25_grams': float(zone_aqi.get('pm25_grams', 0)),
+                    'nox_grams': float(zone_aqi.get('nox_grams', 0)),
+                    'daily_vehicles': int(zone_aqi.get('total_daily_vehicles', 0)),
+                })
+            
+            print(f"[OK] Baseline simulation complete: {len(results)} zones")
+            return jsonify({
+                'zones': results,
+                'temperature': 32,
+                'day': 1,
+                'source': 'corridor_simulation',
+                'total_vehicles': baseline_results.get('total_vehicles', 0),
+                'segments_count': baseline_results.get('segments_count', 0),
+            })
+        except Exception as e:
+            print(f"[ERROR] Corridor simulation failed: {e}")
+            import traceback
+            traceback.print_exc()
+            # Fall through to mock data
+    
+    # Fallback to old simulation or mock data
+    if HAS_SIMULATION:
+        try:
+            zones, weather, traffic = load_data()
+            day = 1
+            temp = weather.loc[weather['day'] == day, 'temperature'].values[0]
+            
+            results = []
+            for i, zone in zones.iterrows():
+                tflow = traffic[(traffic['zone_id'] == zone['zone_id']) & (traffic['day'] == day)]['traffic_flow'].values[0]
+                energy = compute_energy_demand(zone, temp)
+                aqi = compute_aqi(zone, tflow, {'temperature': temp})
+                heat = compute_heat_island(zone)
+                
+                results.append({
+                    'id': int(zone['zone_id']),
+                    'name': f"Zone {int(zone['zone_id'])}",
+                    'aqi': float(aqi),
+                    'energy': float(energy),
+                    'heat': float(heat),
+                    'traffic_flow': float(tflow)
+                })
+            
+            return jsonify({
+                'zones': results,
+                'temperature': float(temp),
+                'day': day,
+                'source': 'legacy_simulation'
+            })
+        except Exception as e:
+            print(f"[ERROR] Simulation failed: {e}")
+            return jsonify({
+                'zones': MOCK_ZONES,
+                'temperature': 32,
+                'day': 1,
+                'source': 'mock_data'
+            })
+    else:
+        return jsonify({
+            'zones': MOCK_ZONES,
+            'temperature': 32,
+            'day': 1,
+            'source': 'mock_data'
         })
-    
-    return jsonify({
-        'zones': results,
-        'temperature': float(temp),
-        'day': day
-    })
 
 @app.route('/api/run', methods=['POST'])
 def run_scenario():

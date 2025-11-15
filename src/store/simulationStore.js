@@ -18,17 +18,63 @@ export const useSimulationStore = create((set, get) => ({
   cameraRef: null,
   controlsRef: null,
   currentCameraPreset: 'overview',
+  
+  // Emergency protocol state
+  triggerEmergencyProtocol: false,
 
   setTime: (t) => set({ time: t }),
   togglePlay: () => set({ playing: !get().playing }),
   setSpeed: (s) => set({ speed: s }),
+  
+  // Trigger emergency protocol
+  startEmergencyProtocol: () => set({ triggerEmergencyProtocol: true }),
+  resetEmergencyProtocol: () => set({ triggerEmergencyProtocol: false }),
 
   // Camera control methods
   setCameraRef: (ref) => set({ cameraRef: ref }),
   setControlsRef: (ref) => set({ controlsRef: ref }),
   setCurrentCameraPreset: (preset) => set({ currentCameraPreset: preset }),
 
-  applyIntervention: (intervention) => set({ currentIntervention: intervention }),
+  applyIntervention: (intervention) => {
+    set({ currentIntervention: intervention })
+    
+    // Apply intervention effects to zones
+    if (intervention && intervention.zones && intervention.zones.length > 0) {
+      const currentZones = get().zones
+      const updatedZones = currentZones.map(zone => {
+        if (intervention.zones.includes(zone.id)) {
+          // Apply AQI reduction based on intervention type
+          let aqiReduction = 0
+          switch (intervention.type) {
+            case 'truck_restriction':
+            case 'truck_ban':
+              aqiReduction = 22
+              break
+            case 'green_cover':
+              aqiReduction = 18
+              break
+            case 'signal_optimization':
+              aqiReduction = 12
+              break
+            case 'retrofit':
+              aqiReduction = 15
+              break
+            default:
+              aqiReduction = 10
+          }
+          
+          return {
+            ...zone,
+            aqi: Math.max(50, zone.aqi - aqiReduction) // Minimum AQI of 50
+          }
+        }
+        return zone
+      })
+      
+      set({ zones: updatedZones })
+      console.log(`Applied intervention: ${intervention.name}`, updatedZones)
+    }
+  },
 
   fetchSimulationData: async () => {
     try {

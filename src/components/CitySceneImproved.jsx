@@ -3,7 +3,8 @@ import { useFrame, useLoader } from '@react-three/fiber'
 import { Box, Sphere, Plane, Text, Cloud, Sky, Stars, Float, Html } from '@react-three/drei'
 import * as THREE from 'three'
 import { useSimulationStore } from '../store/simulationStore'
-import TrafficSystem from './TrafficSystem'
+import EnhancedTrafficSystem from './EnhancedTrafficSystem'
+import PollutionVisualization from './PollutionVisualization'
 
 // Interactive building with proper structure and placement
 function InteractiveBuilding({ position, height, width, depth, aqi, type = 'commercial', buildingData }) {
@@ -653,63 +654,11 @@ function CitySceneImproved() {
         )
       })}
       
-      {/* Subtle pollution visualization - ground-level haze */}
-      {zones.map((zone, idx) => {
-        if (zone.aqi > 180) {
-          const position = cityLayout[idx]?.position || [0, 20, 0]
-          const opacity = Math.min(0.08, (zone.aqi - 180) / 1000) // Very subtle
-          
-          return (
-            <group key={`pollution-${idx}`}>
-              {/* Ground-level haze */}
-              <Plane
-                args={[40, 40]}
-                position={[position[0], 5, position[2]]}
-                rotation={[-Math.PI / 2, 0, 0]}
-              >
-                <meshStandardMaterial
-                  color={zone.aqi > 250 ? '#dc2626' : '#fbbf24'}
-                  transparent
-                  opacity={opacity}
-                  emissive={zone.aqi > 250 ? '#dc2626' : '#fbbf24'}
-                  emissiveIntensity={0.1}
-                />
-              </Plane>
-              
-              {/* Floating particles effect */}
-              {zone.aqi > 250 && Array.from({ length: 5 }).map((_, i) => (
-                <Float
-                  key={i}
-                  speed={0.5}
-                  rotationIntensity={0.2}
-                  floatIntensity={2}
-                >
-                  <Sphere
-                    args={[0.5]}
-                    position={[
-                      position[0] + (Math.random() - 0.5) * 30,
-                      10 + Math.random() * 10,
-                      position[2] + (Math.random() - 0.5) * 30
-                    ]}
-                  >
-                    <meshStandardMaterial
-                      color="#dc2626"
-                      transparent
-                      opacity={0.2}
-                      emissive="#dc2626"
-                      emissiveIntensity={0.3}
-                    />
-                  </Sphere>
-                </Float>
-              ))}
-            </group>
-          )
-        }
-        return null
-      })}
+      {/* ENHANCED POLLUTION VISUALIZATION - Highly Visible */}
+      <PollutionVisualization zones={zones} cityLayout={cityLayout} />
       
-      {/* Road-following traffic system */}
-      <TrafficSystem />
+      {/* ENHANCED TRAFFIC SYSTEM - Larger Vehicles with Exhaust */}
+      <EnhancedTrafficSystem />
     </group>
   )
 }
