@@ -79,27 +79,40 @@ export const useSimulationStore = create((set, get) => ({
         aqiReduction: Math.round(aqiReduction),
         livesSaved: livesSaved,
         baselineZones: baselineZones,
-        emergencyZones: result?.zones || get().zones
+        emergencyZones: result?.zones || get().zones,
+        graphs: {} // Will be populated by graph generation
       }
       
       set({ 
         emergencyStatus: `✅ COMPLETE: ${livesSaved} lives saved | AQI reduced by ${Math.round(aqiReduction)} points`,
         zones: result?.zones || get().zones,
-        emergencyResults: emergencyResults,
-        showResultsModal: true // Show modal
+        emergencyResults: emergencyResults
       })
       
       // Trigger graph generation
       console.log('[Emergency] Triggering graph generation...')
       try {
-        await axios.post('/api/generate_graphs', {
-          baseline: baselineZones,
-          emergency: result?.zones,
+        const graphRes = await axios.post('/api/generate_graphs', {
+          baseline_zones: baselineZones,
+          emergency_zones: result?.zones || get().zones,
           timestamp: new Date().toISOString()
         })
-        console.log('[Emergency] ✅ Graphs generated successfully')
+        
+        if (graphRes.data.graphs) {
+          console.log('[Emergency] ✅ Graphs generated successfully')
+          // Update emergencyResults with graphs
+          set({
+            emergencyResults: {
+              ...get().emergencyResults,
+              graphs: graphRes.data.graphs
+            },
+            showResultsModal: true // Show modal with graphs
+          })
+        }
       } catch (graphErr) {
-        console.warn('[Emergency] Graph generation skipped:', graphErr.message)
+        console.warn('[Emergency] Graph generation failed:', graphErr.message)
+        // Still show modal even if graphs fail
+        set({ showResultsModal: true })
       }
       
       return result

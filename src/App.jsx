@@ -172,9 +172,6 @@ function App() {
       <CameraPresets />
       <EmergencyResultsModal />
       
-      {/* Emergency Results Modal */}
-      <EmergencyResultsModal />
-      
       {/* Loading Screen */}
       {loading && (
         <div style={{

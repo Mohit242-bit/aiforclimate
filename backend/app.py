@@ -370,52 +370,46 @@ def health():
 
 @app.route('/api/generate_graphs', methods=['POST'])
 def generate_graphs():
-    """Generate visualization graphs after emergency protocol"""
+    """Generate visualization graphs after emergency protocol and return as base64"""
     data = request.json
     print("[API] Graph generation requested")
     
     try:
-        # Run the graph generation scripts
-        import subprocess
-        import os
+        # Import the graph generator
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from src.graph_generator import generate_graphs as gen_graphs
         
-        # Get the project root directory
-        project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        # Get baseline and emergency zones from request
+        baseline_zones = data.get('baseline_zones', [])
+        emergency_zones = data.get('emergency_zones', [])
         
-        # Run emergency analysis script
-        emergency_script = os.path.join(project_root, 'generate_emergency_analysis.py')
-        if os.path.exists(emergency_script):
-            result = subprocess.run(
-                ['python', emergency_script],
-                cwd=project_root,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            print(f"[Graph] Emergency analysis: {result.returncode}")
+        print(f"[Graph] Generating graphs for {len(baseline_zones)} baseline zones and {len(emergency_zones)} emergency zones")
         
-        # Run plotly dashboard script
-        plotly_script = os.path.join(project_root, 'generate_plotly_dashboards.py')
-        if os.path.exists(plotly_script):
-            result = subprocess.run(
-                ['python', plotly_script],
-                cwd=project_root,
-                capture_output=True,
-                text=True,
-                timeout=30
-            )
-            print(f"[Graph] Plotly dashboard: {result.returncode}")
-        
-        return jsonify({
-            'status': 'success',
-            'message': 'Graphs generated successfully',
-            'output_dir': 'visualization_outputs'
-        })
+        # Generate graphs as base64
+        if baseline_zones and emergency_zones:
+            graphs = gen_graphs(baseline_zones, emergency_zones)
+            print(f"[Graph] Generated {len(graphs)} graphs")
+            
+            return jsonify({
+                'status': 'success',
+                'graphs': graphs,
+                'message': 'Graphs generated successfully'
+            })
+        else:
+            print("[Graph] Missing baseline or emergency zones data")
+            return jsonify({
+                'status': 'error',
+                'message': 'Missing baseline or emergency zones data',
+                'graphs': {}
+            }), 400
     except Exception as e:
         print(f"[Graph] Error: {e}")
+        import traceback
+        traceback.print_exc()
         return jsonify({
             'status': 'error',
-            'message': str(e)
+            'message': str(e),
+            'graphs': {}
         }), 500
 
 if __name__ == '__main__':

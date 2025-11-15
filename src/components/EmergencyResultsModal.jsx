@@ -124,7 +124,7 @@ function EmergencyResultsModal() {
 
   if (!showResultsModal || !emergencyResults) return null
 
-  const { baselineAqi, newAqi, aqiReduction, livesSaved, baselineZones, emergencyZones } = emergencyResults
+  const { baselineAqi, newAqi, aqiReduction, livesSaved, baselineZones, emergencyZones, graphs } = emergencyResults
 
   // Create graph data
   const aqiByZone = baselineZones?.map((zone, idx) => ({
@@ -257,25 +257,92 @@ function EmergencyResultsModal() {
           padding: '20px',
           marginBottom: '25px'
         }}>
-          <h3 style={{ marginBottom: '20px', fontSize: '20px', color: '#667eea' }}>📊 Performance Analysis</h3>
+          <h3 style={{ marginBottom: '20px', fontSize: '20px', color: '#667eea' }}>📊 Professional Analysis Charts</h3>
           
-          <BarChart 
-            data={aqiReductionData} 
-            title="AQI Reduction per Zone" 
-          />
-          
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-            <BarChart 
-              data={baselineAqiData} 
-              title="Baseline AQI Levels"
-              height={200}
-            />
-            <BarChart 
-              data={emergencyAqiData} 
-              title="Emergency Response AQI"
-              height={200}
-            />
-          </div>
+          {graphs && Object.keys(graphs).length > 0 ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+              {graphs.aqi_comparison && (
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  <img 
+                    src={graphs.aqi_comparison} 
+                    alt="AQI Comparison" 
+                    style={{ width: '100%', borderRadius: '8px' }}
+                  />
+                </div>
+              )}
+              
+              {graphs.aqi_reduction && (
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  <img 
+                    src={graphs.aqi_reduction} 
+                    alt="AQI Reduction Impact" 
+                    style={{ width: '100%', borderRadius: '8px' }}
+                  />
+                </div>
+              )}
+              
+              {graphs.percentage_reduction && (
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  <img 
+                    src={graphs.percentage_reduction} 
+                    alt="Percentage Reduction" 
+                    style={{ width: '100%', borderRadius: '8px' }}
+                  />
+                </div>
+              )}
+              
+              {graphs.trend_chart && (
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  borderRadius: '10px',
+                  padding: '10px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)'
+                }}>
+                  <img 
+                    src={graphs.trend_chart} 
+                    alt="Trend Chart" 
+                    style={{ width: '100%', borderRadius: '8px' }}
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            // Fallback to SVG charts if matplotlib graphs not available
+            <>
+              <BarChart 
+                data={aqiReductionData} 
+                title="AQI Reduction per Zone" 
+              />
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                <BarChart 
+                  data={baselineAqiData} 
+                  title="Baseline AQI Levels"
+                  height={200}
+                />
+                <BarChart 
+                  data={emergencyAqiData} 
+                  title="Emergency Response AQI"
+                  height={200}
+                />
+              </div>
+            </>
+          )}
         </div>
 
         {/* Zone-by-Zone Comparison */}
