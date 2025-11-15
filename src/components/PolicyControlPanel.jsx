@@ -8,7 +8,10 @@ function PolicyControlPanel() {
     getRecommendations, 
     recommendations,
     runScenario,
-    zones
+    zones,
+    startEmergencyProtocol,
+    emergencyActive,
+    emergencyStatus
   } = useSimulationStore()
   
   const [situation, setSituation] = useState(null)
@@ -215,6 +218,56 @@ function PolicyControlPanel() {
           </div>
         ))}
       </div>
+      
+      {/* Emergency Protocol Button */}
+      {!emergencyActive && (
+        <div style={{ marginBottom: '20px' }}>
+          <button 
+            className="button-3d"
+            style={{ 
+              width: '100%',
+              background: 'linear-gradient(135deg, #ef4444 0%, #991b1b 100%)',
+              fontSize: '16px',
+              padding: '15px',
+              fontWeight: 'bold',
+              animation: 'pulse 2s infinite'
+            }}
+            onClick={() => {
+              console.log('🚨 Emergency Protocol Triggered')
+              startEmergencyProtocol()
+            }}
+          >
+            🚨 EMERGENCY PROTOCOL ALPHA
+          </button>
+          <div style={{ fontSize: '11px', opacity: 0.6, marginTop: '5px', textAlign: 'center' }}>
+            Activate multi-intervention crisis response
+          </div>
+        </div>
+      )}
+      
+      {/* Emergency Status Display */}
+      {emergencyActive && (
+        <div style={{ 
+          marginBottom: '20px',
+          padding: '15px',
+          background: 'linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(153,27,27,0.2) 100%)',
+          border: '2px solid #ef4444',
+          borderRadius: '10px',
+          animation: 'pulse 1s infinite'
+        }}>
+          <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '10px' }}>
+            🚨 EMERGENCY PROTOCOL ACTIVE
+          </div>
+          <div style={{ fontSize: '12px', lineHeight: '1.6' }}>
+            {emergencyStatus || 'Running emergency simulations...'}
+          </div>
+          <div style={{ marginTop: '10px', fontSize: '11px', opacity: 0.8 }}>
+            <div>✓ Analyzing AQI levels</div>
+            <div>✓ Deploying interventions</div>
+            <div>✓ Computing impact...</div>
+          </div>
+        </div>
+      )}
       
       {/* Quick Actions */}
       <div style={{ marginBottom: '20px' }}>

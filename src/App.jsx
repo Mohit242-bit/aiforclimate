@@ -6,9 +6,7 @@ import { EffectComposer, Bloom, DepthOfField, Vignette } from '@react-three/post
 import CitySceneImproved from './components/CitySceneImproved'
 import PolicyControlPanel from './components/PolicyControlPanel'
 import InfoPanel from './components/InfoPanel'
-import Timeline from './components/Timeline'
 import Legend from './components/Legend'
-import PlaybackController from './components/PlaybackController'
 import CameraPresets from './components/CameraPresets'
 import CameraManager from './components/CameraManager'
 import CameraControls, { NavigationModeSelector } from './components/CameraControls'
@@ -170,13 +168,8 @@ function App() {
       {/* UI Overlays */}
       <NavigationModeSelector />
       {showLeftPanel && <InfoPanel />}
-      {/* UI Overlays */}
-      <NavigationModeSelector />
-      {showLeftPanel && <InfoPanel />}
       {showRightPanel && <PolicyControlPanel />}
-      <Timeline />
       <Legend />
-      <PlaybackController />
       <CameraPresets />
       
       {/* Loading Screen */}

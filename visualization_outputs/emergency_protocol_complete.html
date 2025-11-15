@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Protocol - Complete Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+        }
+        
+        h1 {
+            color: #ef4444;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 3em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-value {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .metric-label {
+            font-size: 1em;
+            opacity: 0.95;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .card li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .card li:last-child {
+            border-bottom: none;
+        }
+        
+        .value {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .zone-details {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .zone-details h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .zone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .zone-item {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .zone-item .zone-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        
+        .zone-item .zone-metric {
+            font-size: 0.9em;
+            color: #666;
+            margin: 5px 0;
+        }
+        
+        .footer {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e5e7eb;
+            text-align: center;
+            color: #666;
+        }
+        
+        .iframe-container {
+            margin-top: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        
+        .links {
+            margin-top: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .link-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .link-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Emergency Protocol Analysis</h1>
+        <p class="subtitle">Delhi Digital Twin - Crisis Response Effectiveness Report</p>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-value">285</div>
+                <div class="metric-label">Total AQI Reduction</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">31.1%</div>
+                <div class="metric-label">Avg Speed Improvement</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">50.5%</div>
+                <div class="metric-label">Avg Traffic Reduction</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">71</div>
+                <div class="metric-label">Lives Saved (Est.)</div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <h3>Key Achievements</h3>
+                <ul>
+                    <li><span>AQI Reduction per Zone:</span> <span class="value">29-60 points</span></li>
+                    <li><span>Speed Improvement:</span> <span class="value">+28% to +36%</span></li>
+                    <li><span>Traffic Reduction:</span> <span class="value">~50%</span></li>
+                    <li><span>PM2.5 Reduction:</span> <span class="value">18% avg</span></li>
+                    <li><span>Response Time:</span> <span class="value">< 5 minutes</span></li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>Intervention Measures</h3>
+                <ul>
+                    <li><span>Odd-Even Rule:</span> <span class="value">Active</span></li>
+                    <li><span>Truck Bans:</span> <span class="value">6 AM - 11 PM</span></li>
+                    <li><span>Metro Incentives:</span> <span class="value">Free passes</span></li>
+                    <li><span>Speed Limits:</span> <span class="value">Increased</span></li>
+                    <li><span>Rerouting Active:</span> <span class="value">Yes</span></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="zone-details">
+            <h3>Zone-by-Zone Performance</h3>
+            <div class="zone-grid">
+                <div class="zone-item">
+                    <div class="zone-name">Connaught Place</div>
+                    <div class="zone-metric">AQI: 328 → 265 (-63)</div>
+                    <div class="zone-metric">Speed: +28.9%</div>
+                    <div class="zone-metric">Traffic: -52%</div>
+                </div>
+                <div class="zone-item">
+                    <div class="zone-name">Karol Bagh</div>
+                    <div class="zone-metric">AQI: 315 → 270 (-45)</div>
+                    <div class="zone-metric">Speed: +29.2%</div>
+                    <div class="zone-metric">Traffic: -50%</div>
+                </div>
+                <div class="zone-item">
+                    <div class="zone-name">Dwarka</div>
+                    <div class="zone-metric">AQI: 342 → 285 (-57)</div>
+                    <div class="zone-metric">Speed: +31%</div>
+                    <div class="zone-metric">Traffic: -50.5%</div>
+                </div>
+                <div class="zone-item">
+                    <div class="zone-name">Rohini</div>
+                    <div class="zone-metric">AQI: 305 → 245 (-60)</div>
+                    <div class="zone-metric">Speed: +36%</div>
+                    <div class="zone-metric">Traffic: -50%</div>
+                </div>
+                <div class="zone-item">
+                    <div class="zone-name">Saket</div>
+                    <div class="zone-metric">AQI: 320 → 260 (-60)</div>
+                    <div class="zone-metric">Speed: +30.4%</div>
+                    <div class="zone-metric">Traffic: -50%</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="links">
+            <a href="interactive_dashboard.html" class="link-btn">View Interactive Dashboard</a>
+            <a href="impact_metrics.html" class="link-btn">View Impact Metrics</a>
+            <a href="pollutant_analysis.html" class="link-btn">View Pollutant Analysis</a>
+        </div>
+        
+        <div class="footer">
+            <p>Emergency Protocol Analysis Report | Generated using Delhi Digital Twin Analysis Engine</p>
+            <p>System Status: ACTIVE | Last Updated: 2025-11-15</p>
+        </div>
+    </div>
+</body>
+</html>
+    

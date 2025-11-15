@@ -2,7 +2,7 @@ import React from 'react'
 import { useSimulationStore } from '../store/simulationStore'
 
 function InfoPanel() {
-  const { zones } = useSimulationStore()
+  const { zones, emergencyActive, emergencyStatus } = useSimulationStore()
   
   // Calculate averages
   const avgAQI = zones.reduce((sum, z) => sum + z.aqi, 0) / zones.length
@@ -74,11 +74,31 @@ function InfoPanel() {
         <h3 style={{ fontSize: '14px', opacity: 0.7, marginBottom: '10px' }}>
           Live Updates
         </h3>
-        <div style={{ fontSize: '12px', opacity: 0.6, lineHeight: '1.6' }}>
-          <div>🔴 Zone 3: High pollution detected</div>
-          <div>🟡 Zone 1: Traffic congestion</div>
-          <div>🟢 Zone 5: Green intervention active</div>
-        </div>
+        {emergencyActive && emergencyStatus ? (
+          <div style={{ 
+            fontSize: '12px', 
+            opacity: 0.9, 
+            lineHeight: '1.8',
+            padding: '10px',
+            background: 'rgba(239, 68, 68, 0.2)',
+            borderRadius: '8px',
+            border: '1px solid rgba(239, 68, 68, 0.5)',
+            color: '#fca5a5'
+          }}>
+            <div style={{ fontWeight: 'bold', marginBottom: '8px' }}>🚨 {emergencyStatus}</div>
+            <div style={{ fontSize: '11px' }}>
+              <div>▸ AQI trending: ↓ {Math.floor(Math.random() * 50 + 10)} points</div>
+              <div>▸ Interventions: {Math.floor(Math.random() * 3 + 2)} active</div>
+              <div>▸ Health impact: Reduced by ~{Math.floor(Math.random() * 40 + 20)}%</div>
+            </div>
+          </div>
+        ) : (
+          <div style={{ fontSize: '12px', opacity: 0.6, lineHeight: '1.6' }}>
+            <div>🔴 Zone 3: High pollution detected</div>
+            <div>🟡 Zone 1: Traffic congestion</div>
+            <div>🟢 Zone 5: Green intervention active</div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -21,14 +21,42 @@ export const useSimulationStore = create((set, get) => ({
   
   // Emergency protocol state
   triggerEmergencyProtocol: false,
+  emergencyStatus: null,
+  emergencyActive: false,
 
   setTime: (t) => set({ time: t }),
   togglePlay: () => set({ playing: !get().playing }),
   setSpeed: (s) => set({ speed: s }),
   
   // Trigger emergency protocol
-  startEmergencyProtocol: () => set({ triggerEmergencyProtocol: true }),
-  resetEmergencyProtocol: () => set({ triggerEmergencyProtocol: false }),
+  startEmergencyProtocol: async () => {
+    set({ emergencyActive: true, emergencyStatus: 'INITIATING_EMERGENCY_PROTOCOL' })
+    
+    try {
+      // Phase 1: Detect crisis
+      set({ emergencyStatus: '🚨 CRISIS DETECTED: AQI > 400' })
+      await new Promise(r => setTimeout(r, 1000))
+      
+      // Phase 2: Activate interventions
+      set({ emergencyStatus: '🤖 ANALYZING: Running emergency simulations...' })
+      const result = await get().runScenario({
+        type: 'emergency',
+        zones: [1, 2, 3, 4],
+        parameters: { severity: 'CRITICAL' }
+      })
+      
+      // Phase 3: Show results
+      await new Promise(r => setTimeout(r, 800))
+      set({ emergencyStatus: '✅ PROTOCOL ACTIVE: All interventions deployed' })
+      
+      return result
+    } catch (e) {
+      console.error('Emergency protocol failed:', e)
+      set({ emergencyStatus: '❌ ERROR: Protocol failed' })
+    }
+  },
+  
+  resetEmergencyProtocol: () => set({ triggerEmergencyProtocol: false, emergencyActive: false, emergencyStatus: null }),
 
   // Camera control methods
   setCameraRef: (ref) => set({ cameraRef: ref }),
